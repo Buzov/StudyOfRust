@@ -1,4 +1,8 @@
 fn main() {
+//    number_type();
+    let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
+
+    println!("{}", hex_octal_bin);
     fn plus_one(i: i32) -> i32 { i + 1 }
 
     let f = plus_one;
@@ -37,6 +41,14 @@ fn main() {
 //    println!("{}", *r);
 
 }
+
+//fn number_type() -> () {
+//    let y = 92_000_000i64;
+//    let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
+//    let byte: u8 = b'a';
+//    assert_eq!(byte, 65);
+//}
+
 
 fn test(func: fn(i32) -> i32, i: i32) -> i32 {
     func(i)
