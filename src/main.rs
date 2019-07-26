@@ -82,6 +82,10 @@ fn links() {
     println!("r: {}", r);
 }
 
+fn box_test() {
+    let x: Box<i32> = Box::new(92);
+}
+
 fn test(func: fn(i32) -> i32, i: i32) -> i32 {
     func(i)
 }
