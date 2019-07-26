@@ -68,7 +68,10 @@ fn cortage() {
 }
 
 fn array() {
-
+    let xs: [u8; 3] = [1, 2, 3];
+    assert_eq!(xs[0], 1); // index -- usize
+    assert_eq!(xs.len(), 3); // len() -- usize
+    let mut buf = [0u8; 1024]; // буфер из 1024 элементов, заполненный нулями
 }
 
 fn test(func: fn(i32) -> i32, i: i32) -> i32 {
