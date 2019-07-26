@@ -42,6 +42,7 @@ fn main() {
 //    println!("{}", z);
 //    println!("{}", *r);
     cortage();
+    links();
 }
 
 //fn number_type() -> () {
@@ -72,6 +73,13 @@ fn array() {
     assert_eq!(xs[0], 1); // index -- usize
     assert_eq!(xs.len(), 3); // len() -- usize
     let mut buf = [0u8; 1024]; // буфер из 1024 элементов, заполненный нулями
+}
+
+fn links() {
+    let mut x: i32 = 92;
+    let r: &mut i32 = &mut 92; // явное взятие ссылки
+    *r += 1; // явное разыменовывание ссылки
+    println!("r: {}", r);
 }
 
 fn test(func: fn(i32) -> i32, i: i32) -> i32 {
