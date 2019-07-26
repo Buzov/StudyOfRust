@@ -29,6 +29,8 @@ fn main() {
     let b = &a;
     println!("{}", b);
     println!("{}", a);
+
+    println!("{} - {}", 8.5f32.ceil().sin().round().sqrt(), 60f64.sin());
 //    let x = 1;
 //    let r: &i32;
 //    let z: i32;
@@ -39,7 +41,7 @@ fn main() {
 //    }
 //    println!("{}", z);
 //    println!("{}", *r);
-
+    cortage();
 }
 
 //fn number_type() -> () {
@@ -49,6 +51,25 @@ fn main() {
 //    assert_eq!(byte, 65);
 //}
 
+fn cortage() {
+    let pair: (f32, i32) = (0.0, 92);
+    let one: (f32,) = (0.0,); // кортеж из одного элемента, нужна запятая
+//    let (x, y) = pair;
+    let (_x, _y) = pair;
+    let x = pair.0;
+    let y = pair.1;
+    println!("{}", x);
+    println!("{}", y);
+
+
+    let t = (92,); // кортеж ничего не стоит. адресс обертки и элемента совпадают
+    println!("{:?}", &t as *const (i32,)); // 0x7ffc6b2f6aa4
+    println!("{:?}", &t.0 as *const i32); // 0x7ffc6b2f6aa4
+}
+
+fn array() {
+
+}
 
 fn test(func: fn(i32) -> i32, i: i32) -> i32 {
     func(i)
