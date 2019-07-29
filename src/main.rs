@@ -122,8 +122,14 @@ fn main_2() {
     }
     println!("{}", *r);
 }
+
 fn f<'a, 'b>(x: &'a i32, y: &'b i32) -> &'a i32 {
     // y если вернуть y - будет ошибка компиляции
     x // parameter and the return type are declared
     // with different lifetimes
+}
+
+fn block() {
+    let i: i32 = { 1  };
+    let i: ()  = { 1; };
 }
