@@ -52,6 +52,7 @@ fn main() {
 //    println!("{}", *r);
     cortage();
     links();
+    main_2();
 }
 
 //fn number_type() -> () {
@@ -110,4 +111,19 @@ fn test(func: fn(i32) -> i32, i: i32) -> i32 {
 
 fn corteg<'a>() -> (i32, &'a str) {
     (1, "dfgd")
+}
+
+fn main_2() {
+    let x = 1;
+    let r: &i32;
+    {
+        let y = 2;
+        r = f(&x, &y); // ok
+    }
+    println!("{}", *r);
+}
+fn f<'a, 'b>(x: &'a i32, y: &'b i32) -> &'a i32 {
+    // y если вернуть y - будет ошибка компиляции
+    x // parameter and the return type are declared
+    // with different lifetimes
 }
