@@ -56,6 +56,8 @@ fn main() {
 
     let point = Point{x: 1.0, y: 2.0};
     println!("point  distance_from_origin: {}", point.distance_from_origin());
+    let point_origin = Point::origin();
+    println!("point_origin  distance_from_origin: {}", point_origin.distance_from_origin());
 //    let point = Point{x: 1.0, y: 2.0, };
 }
 
@@ -161,6 +163,10 @@ struct Point {
 }
 
 impl Point {
+    fn origin() -> Point {
+        Point{x: 0.0, y: 0.0}
+    }
+
     fn distance_from_origin(&self) -> f64 {
         (self.x * self.x + self.y * self.y).sqrt()
     }
