@@ -50,7 +50,7 @@ fn main() {
 //    }
 //    println!("{}", z);
 //    println!("{}", *r);
-    cortage();
+    tuple();
     links();
     main_2();
 
@@ -59,6 +59,8 @@ fn main() {
     let point_origin = Point::origin();
     println!("point_origin  distance_from_origin: {}", point_origin.distance_from_origin());
 //    let point = Point{x: 1.0, y: 2.0, };
+    let tuple_struct = PointTuple(0.0, 1.0);
+    assert_eq!(tuple_struct.0, 0.0);
 }
 
 //fn number_type() -> () {
@@ -68,7 +70,7 @@ fn main() {
 //    assert_eq!(byte, 65);
 //}
 
-fn cortage() {
+fn tuple() {
     let pair: (f32, i32) = (0.0, 92);
     let one: (f32,) = (0.0,); // кортеж из одного элемента, нужна запятая
 //    let (x, y) = pair;
@@ -171,3 +173,18 @@ impl Point {
         (self.x * self.x + self.y * self.y).sqrt()
     }
 }
+
+struct PointTuple(f64,f64,);
+
+impl PointTuple {
+    fn origin() -> Point {
+        Point{x: 0.0, y: 0.0}
+    }
+
+    fn dist(self, other: PointTuple) -> f64 {
+        let PointTuple(x1, y1) = self;
+        let PointTuple(x2, y2) = other;
+        ((x1 - x2).powi(2) + (y1 - y2).powi(2)).sqrt()
+    }
+}
+
