@@ -61,6 +61,12 @@ fn main() {
 //    let point = Point{x: 1.0, y: 2.0, };
     let tuple_struct = PointTuple(0.0, 1.0);
     assert_eq!(tuple_struct.0, 0.0);
+
+    let square = |x| x * x;
+    assert_eq!(square(5), 25);
+
+//    println!("tuple_fnin: {}", tuple_fn(tuple_struct));
+
 }
 
 //fn number_type() -> () {
@@ -187,4 +193,10 @@ impl PointTuple {
         ((x1 - x2).powi(2) + (y1 - y2).powi(2)).sqrt()
     }
 }
+
+fn tuple_fn(fun: &Fn() -> (f64,f64)) -> (f64,f64) {
+    fun()
+}
+
+
 
