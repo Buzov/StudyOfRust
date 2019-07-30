@@ -66,7 +66,7 @@ fn main() {
     assert_eq!(square(5), 25);
 
 //    println!("tuple_fnin: {}", tuple_fn(tuple_struct));
-
+    zero_sized_types();
 }
 
 //fn number_type() -> () {
@@ -196,6 +196,17 @@ impl PointTuple {
 
 fn tuple_fn(fun: &Fn() -> (f64,f64)) -> (f64,f64) {
     fun()
+}
+
+
+struct Zero;
+
+fn zero_sized_types() -> () {
+    let t = Zero;
+    assert!(std::mem::size_of::<Zero>() == 0);
+    assert!(std::mem::size_of::<(Zero, Zero)>() == 0);
+    assert!(std::mem::size_of::<[Zero; 1024]>() == 0);
+    assert!(std::mem::size_of::<()>() == 0);
 }
 
 
