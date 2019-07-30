@@ -1,5 +1,7 @@
 use std::{thread, time};
+use std::cmp::Ordering;
 
+//fn main {}  ==  fn main() -> ()
 fn main() {
 
     test_sleep();
@@ -62,6 +64,20 @@ fn foo() {
 fn bar(b: &i32) {
 }
 
+fn test_vec() {
+    for x in vec![1, 2, 3] {
+        println!("x = {}", x);
+    }
+
+    let xs  = vec![1, 2, 3];
+    for i in 0..xs.len() {
+        let x = xs[i];
+        println!("x = {}", x);
+    }
+    let xs2  = vec![1, 2, 3];
+    print_slice(&xs2);
+}
+
 fn loops() {
     for x in 0..10 {
         println!("{}", x); // x: i32
@@ -75,6 +91,102 @@ fn loops() {
     for (linenumber, line) in lines.enumerate() {
         println!("{}: {}", linenumber, line);
     }
+
+    let x: () = while false {};
+    let x2: () = if true {  92; };
+//    let x3 = if true {  92 }; error ожидается тип () если нет блока else
+
+//    while true  {
+//        if cond1 {
+//            continue;
+//        }
+//        if cond2 {
+//            break;
+//        }
+//    }
+//
+//    'outer: while cond1 {
+//        while cond2 {
+//            break 'outer;
+//        }
+//    }
+
+}
+
+fn test_ranges() {
+    let bounded: std::ops::Range<i32> = 0..10;
+    let from = 0..;
+    let to = ..10;
+    let full = ..;
+    let inclusive = 0..=9;
+
+    for i in (0..10).step_by(2) {
+        println!("i = {}", i);
+    }
+}
+
+
+fn test_loop() {
+//    let uninit;
+//    while true {
+//        if condition {
+//            uninit = 92;
+//            break;
+//        }
+//    }
+//    pritnln!("{}", uninit); // error
+    let x = 30;
+    let init;
+    loop {
+        if x == 31 {
+            init = 92;
+            break;
+        }
+    }
+    println!("{}", init); // ok
+
+}
+
+fn test_loop_2() {
+    let x = 30;
+    let init;
+
+    if x == 31 {
+        init = 92;
+    } else {
+        loop {}
+    }
+    println!("{}", init); // ok!
+}
+
+fn test_loop_3() {
+    let x = 30;
+    let init: i32 = loop {
+        if  x == 31 {
+            break 92;
+        }
+    };
+
+    println!("{}", init); // ok!
+}
+
+fn test_expression() -> i32 {
+    let x = 30;
+    if x == 0 {
+        println!("zero");
+    }      // statement
+
+    { 0; } // statement
+
+
+
+    let s = if x > 0 {
+        "positive"
+    } else {
+        "negative"
+    };
+
+    if true { 92 } else { 62 } // expression!
 }
 
 fn test_closures() {
@@ -134,7 +246,7 @@ fn exclamation_mark_0() -> i32 {
 }
 
 fn exclamation_mark_1() -> ! {
-//    let x = return;
+//    let i = return;
     let x = exclamation_mark_2();
     x
 }
@@ -193,6 +305,14 @@ fn tuple() {
     println!("{:?}", &t.0 as *const i32); // 0x7ffc6b2f6aa4
 }
 
+//Паттерн newtype
+//Представление в памяти такое же, как и у внутреннего типа
+//Нет необходимости в аннотациях
+//Нет автоматической конверсии/автоматических методов
+//struct Kilometers(f64);
+//struct Miles(f64);
+
+// Struct-tuple
 struct PointTuple(f64,f64,);
 
 impl PointTuple {
@@ -216,6 +336,8 @@ fn tuple_fn(fun: &Fn() -> (f64,f64)) -> (f64,f64) {
     fun()
 }
 
+//Zero Sized Types
+//unit struct
 struct Zero;
 
 fn zero_sized_types() -> () {
@@ -239,5 +361,161 @@ fn sleep(millis: u64) {
     assert!(now.elapsed() >= ten_millis);
 }
 
+// Types tage
+struct Kilometers;
+struct Miles;
+
+struct Distance<M> {
+    amount: f64,
+    metric: M,
+}
+
+fn test_types_struct() {
+    let d1: Distance<Kilometers> = Distance {
+        amount: 92.0,
+        metric: Kilometers,
+    };
+    let d2: Distance<Miles> = Distance {
+        amount: 92.0,
+        metric: Miles,
+    };
+}
+
+fn print_slice(xs: &[i32]) {
+    for i in 0..xs.len() {
+        println!("{}", xs[i]);
+    }
+}
 
 
+//Dynamically Sized Types
+//[i32; 4]  — четыре числа
+//&[i32; 4]  — адресс в памяти, где лежат четыре числа
+//[i32]  — n чисел
+//&[i32]  — указатель + количество элементов, fat pointer
+//mem::size_of::<[i32]>();
+//^^^^^^^^^^^^^^^^^^^^^ doesn't have a size known at compile-time
+//assert_eq!(
+//mem::size_of::<&[i32]>(),
+//mem::size_of::<usize>() * 2,
+
+enum Shape {
+    Circle {
+        center: Point,
+        radius: f64,
+    },
+    Square {
+        bottom_left: Point,
+        top_right: Point,
+    },
+}
+
+impl Shape {
+    fn circle(center: Point, radius: f64) -> Shape {
+        Shape::Circle { center, radius }
+    }
+    fn area(&self) -> f64 {
+        match self {
+            Shape::Circle { radius, .. } => {
+                std::f64::consts::PI * radius * radius
+            }
+            Shape::Square { bottom_left, top_right } => {
+                unimplemented!()
+            }
+        }
+    }
+}
+
+enum Expr {
+    Negation(Box<Expr>),
+    BinOp { lhs: Box<Expr>, rhs: Box<Expr> },
+    Unit,
+}
+
+// use std::cmp::Ordering;
+//enum Ordering {
+//    Less,
+//    Equal,
+//    Greater,
+//}
+
+fn binary_search(xs: &[i32], x: i32) -> bool {
+    if xs.is_empty() {
+        return false;
+    }
+    let mid = xs.len() / 2;
+    let subslice = match xs[mid].cmp(&x) {
+        Ordering::Less => &xs[mid + 1..],
+        Ordering::Equal => return true,
+        Ordering::Greater => &xs[..mid],
+    };
+    binary_search(subslice, x)
+}
+
+fn foo2(xs: &[i32]) {
+    match xs.get(92) {
+        Some(value) => println!("Some"),
+        None => panic!("out of bounds access")
+    }
+}
+
+//enum Result<T, E> {
+//    Ok(T),
+//    Err(E),
+//}
+//impl<T> [T] {
+//    pub fn binary_search(&self, x: &T) -> Result<usize, usize>
+//        where
+//            T: Ord
+//    {
+//        self.binary_search_by(|p| p.cmp(x))
+//    }
+//}
+
+//Newtype Variant
+//BinOp  и If  типами не являются
+enum Expr1 {
+    BinOp {
+        lhs: Box<Expr1>,
+        rhs: Box<Expr1>,
+//        op: Op,
+    },
+    If {
+        cond: Box<Expr1>,
+        then_branch: Box<Expr1>,
+        else_branch: Box<Expr1>,
+    },
+}
+
+enum Expr2 {
+    BinOp(BinOp),
+    If(If)
+}
+
+struct BinOp {
+    lhs: Box<Expr>,
+    rhs: Box<Expr>,
+//    op: Op,
+}
+
+struct If {
+    cond: Box<Expr>,
+    then_branch: Box<Expr>,
+    else_branch: Box<Expr>,
+}
+
+//энум без вариантов — аналог  !
+//size_of::<Void>() == 0 математически должна быть -бесконечность
+enum Void {}
+
+fn test_enum_void(void: Void) -> i32 {
+    let x =  match void {
+    };
+    x
+}
+//гарантированно что
+//mem::size_of::<Option<&T>>() == mem::size_of::<&T>()
+//mem::size_of::<Option<Box<T>>>() == mem::size_of::<Box<T>>()
+//bool  занимает 1 байт, чтобы  &bool  работал всегда
+//Newtype Variant может быть больше обычного enum из-за паддинга :o)
+//бывают типы "страных" размеров: ZST, DST, uninhabited
