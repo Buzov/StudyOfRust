@@ -53,6 +53,10 @@ fn main() {
     cortage();
     links();
     main_2();
+
+    let point = Point{x: 1.0, y: 2.0};
+    println!("point  distance_from_origin: {}", point.distance_from_origin());
+//    let point = Point{x: 1.0, y: 2.0, };
 }
 
 //fn number_type() -> () {
@@ -148,5 +152,16 @@ fn exclamation_mark_1() -> ! {
 fn exclamation_mark_2() -> ! {
     loop {
 
+    }
+}
+
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+impl Point {
+    fn distance_from_origin(&self) -> f64 {
+        (self.x * self.x + self.y * self.y).sqrt()
     }
 }
