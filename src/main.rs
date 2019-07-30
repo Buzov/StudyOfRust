@@ -133,3 +133,20 @@ fn block() {
     let i: i32 = { 1  };
     let i: ()  = { 1; };
 }
+
+fn exclamation_mark_0() -> i32 {
+    let x: i32 = exclamation_mark_1();
+    x
+}
+
+fn exclamation_mark_1() -> ! {
+//    let x = return;
+    let x = exclamation_mark_2();
+    x
+}
+
+fn exclamation_mark_2() -> ! {
+    loop {
+
+    }
+}
