@@ -2,94 +2,30 @@ use std::{thread, time};
 
 fn main() {
 
-    let ten_millis = time::Duration::from_millis(1000);
-    let now = time::Instant::now();
-
-    thread::sleep(ten_millis);
-
-    assert!(now.elapsed() >= ten_millis);
-//    number_type();
-    let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
-
-    println!("{}", hex_octal_bin);
-    fn plus_one(i: i32) -> i32 { i + 1 }
-
-    let f = plus_one;
-    let six = f(5);
-    println!("{}", six);
-    println!("{}", test(f, 10));
-    let (x, y) = corteg();
-    println!("x: {}, y: {}", x, y);
-
-    for x in 0..10 {
-        println!("{}", x); // x: i32
-    }
-
-    for (i,j) in (5..10).enumerate() {
-        println!("i = {} и j = {}", i, j);
-    }
-
-    let lines = "привет\nмир\nhello\nworld".lines();
-    for (linenumber, line) in lines.enumerate() {
-        println!("{}: {}", linenumber, line);
-    }
-
-    let a = 5;
-    let b = &a;
-    println!("{}", b);
-    println!("{}", a);
-
-    println!("{} - {}", 8.5f32.ceil().sin().round().sqrt(), 60f64.sin());
-//    let x = 1;
-//    let r: &i32;
-//    let z: i32;
-//    {
-//        let y = 2;
-//        r = &y; // borrowed value does not live long enough
-//        z = y;
-//    }
-//    println!("{}", z);
-//    println!("{}", *r);
+    test_sleep();
+    number_type();
+    test_fn_tuple();
     tuple();
+    loops();
     links();
-    main_2();
 
-    let point = Point{x: 1.0, y: 2.0};
-    println!("point  distance_from_origin: {}", point.distance_from_origin());
-    let point_origin = Point::origin();
-    println!("point_origin  distance_from_origin: {}", point_origin.distance_from_origin());
-//    let point = Point{x: 1.0, y: 2.0, };
-    let tuple_struct = PointTuple(0.0, 1.0);
-    assert_eq!(tuple_struct.0, 0.0);
+    test_life_time_in_fn();
+    test_closures();
 
-    let square = |x| x * x;
-    assert_eq!(square(5), 25);
-
+    test_point();
+    test_point_tuple();
 //    println!("tuple_fnin: {}", tuple_fn(tuple_struct));
     zero_sized_types();
+
 }
 
-//fn number_type() -> () {
-//    let y = 92_000_000i64;
-//    let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
-//    let byte: u8 = b'a';
+fn number_type() -> () {
+    let y = 92_000_000i64;
+    let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
+    println!("{}", hex_octal_bin);
+    let byte: u8 = b'a';
 //    assert_eq!(byte, 65);
-//}
-
-fn tuple() {
-    let pair: (f32, i32) = (0.0, 92);
-    let one: (f32,) = (0.0,); // кортеж из одного элемента, нужна запятая
-//    let (x, y) = pair;
-    let (_x, _y) = pair;
-    let x = pair.0;
-    let y = pair.1;
-    println!("{}", x);
-    println!("{}", y);
-
-
-    let t = (92,); // кортеж ничего не стоит. адресс обертки и элемента совпадают
-    println!("{:?}", &t as *const (i32,)); // 0x7ffc6b2f6aa4
-    println!("{:?}", &t.0 as *const i32); // 0x7ffc6b2f6aa4
+    println!("{} - {}", 8.5f32.ceil().sin().round().sqrt(), 60f64.sin());
 }
 
 fn array() {
@@ -104,6 +40,10 @@ fn links() {
     let r: &mut i32 = &mut 92; // явное взятие ссылки
     *r += 1; // явное разыменовывание ссылки
     println!("r: {}", r);
+    let a = 5;
+    let b = &a;
+    println!("{}", b);
+    println!("{}", a);
 }
 
 fn box_test() {
@@ -119,25 +59,61 @@ fn foo() {
 fn bar(b: &i32) {
 }
 
-fn test(func: fn(i32) -> i32, i: i32) -> i32 {
+fn loops() {
+    for x in 0..10 {
+        println!("{}", x); // x: i32
+    }
+
+    for (i,j) in (5..10).enumerate() {
+        println!("i = {} и j = {}", i, j);
+    }
+
+    let lines = "привет\nмир\nhello\nworld".lines();
+    for (linenumber, line) in lines.enumerate() {
+        println!("{}: {}", linenumber, line);
+    }
+}
+
+fn test_closures() {
+    let square = |x| x * x;
+    assert_eq!(square(5), 25);
+}
+
+fn test_fn_like_parameter() {
+    fn plus_one(i: i32) -> i32 { i + 1 }
+
+    let f = plus_one;
+    let six = f(5);
+    println!("{}", six);
+    println!("fn_like_parameter result: {}", fn_like_parameter(f, 10));
+    println!("fn_like_parameter result: {}", fn_like_parameter(f, 20));
+}
+
+fn fn_like_parameter(func: fn(i32) -> i32, i: i32) -> i32 {
     func(i)
 }
 
-fn corteg<'a>() -> (i32, &'a str) {
-    (1, "dfgd")
-}
-
-fn main_2() {
+fn test_life_time_in_fn() {
     let x = 1;
     let r: &i32;
     {
         let y = 2;
-        r = f(&x, &y); // ok
+        r = life_time_in_fn(&x, &y); // ok
     }
     println!("{}", *r);
+    //    let x = 1;
+//    let r: &i32;
+//    let z: i32;
+//    {
+//        let y = 2;
+//        r = &y; // borrowed value does not live long enough
+//        z = y;
+//    }
+//    println!("{}", z);
+//    println!("{}", *r);
 }
 
-fn f<'a, 'b>(x: &'a i32, y: &'b i32) -> &'a i32 {
+fn life_time_in_fn<'a, 'b>(x: &'a i32, y: &'b i32) -> &'a i32 {
     // y если вернуть y - будет ошибка компиляции
     x // parameter and the return type are declared
     // with different lifetimes
@@ -180,6 +156,39 @@ impl Point {
     }
 }
 
+fn test_point() {
+    let point = Point{x: 1.0, y: 2.0};
+    println!("point  distance_from_origin: {}", point.distance_from_origin());
+    let point_origin = Point::origin();
+    println!("point_origin  distance_from_origin: {}", point_origin.distance_from_origin());
+//    let point = Point{x: 1.0, y: 2.0, };
+}
+
+fn test_fn_tuple() {
+    let (x, y) = fn_tuple();
+    println!("x: {}, y: {}", x, y);
+    tuple();
+}
+
+fn fn_tuple<'a>() -> (i32, &'a str) {
+    (1, "dfgd")
+}
+
+fn tuple() {
+    let pair: (f32, i32) = (0.0, 92);
+    let one: (f32,) = (0.0,); // кортеж из одного элемента, нужна запятая
+//    let (x, y) = pair;
+    let (_x, _y) = pair;
+    let x = pair.0;
+    let y = pair.1;
+    println!("{}", x);
+    println!("{}", y);
+
+    let t = (92,); // кортеж ничего не стоит. адресс обертки и элемента совпадают
+    println!("{:?}", &t as *const (i32,)); // 0x7ffc6b2f6aa4
+    println!("{:?}", &t.0 as *const i32); // 0x7ffc6b2f6aa4
+}
+
 struct PointTuple(f64,f64,);
 
 impl PointTuple {
@@ -194,10 +203,14 @@ impl PointTuple {
     }
 }
 
+fn test_point_tuple() {
+    let tuple_struct = PointTuple(0.0, 1.0);
+    assert_eq!(tuple_struct.0, 0.0);
+}
+
 fn tuple_fn(fun: &Fn() -> (f64,f64)) -> (f64,f64) {
     fun()
 }
-
 
 struct Zero;
 
@@ -207,6 +220,19 @@ fn zero_sized_types() -> () {
     assert!(std::mem::size_of::<(Zero, Zero)>() == 0);
     assert!(std::mem::size_of::<[Zero; 1024]>() == 0);
     assert!(std::mem::size_of::<()>() == 0);
+}
+
+fn test_sleep() {
+    sleep(1000);
+}
+
+fn sleep(millis: u64) {
+    let ten_millis = time::Duration::from_millis(millis);
+    let now = time::Instant::now();
+
+    thread::sleep(ten_millis);
+
+    assert!(now.elapsed() >= ten_millis);
 }
 
 
