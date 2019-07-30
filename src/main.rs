@@ -21,9 +21,12 @@ fn main() {
 
 fn number_type() -> () {
     let y = 92_000_000i64;
+    println!("y: {}", y);
+
     let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
     println!("{}", hex_octal_bin);
     let byte: u8 = b'a';
+    println!("byte: {}", byte);
 //    assert_eq!(byte, 65);
     println!("{} - {}", 8.5f32.ceil().sin().round().sqrt(), 60f64.sin());
 }
@@ -114,6 +117,7 @@ fn test_life_time_in_fn() {
 }
 
 fn life_time_in_fn<'a, 'b>(x: &'a i32, y: &'b i32) -> &'a i32 {
+   println!("life_time_in_fn y: {}", y);
     // y если вернуть y - будет ошибка компиляции
     x // parameter and the return type are declared
     // with different lifetimes
