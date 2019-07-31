@@ -19,13 +19,7 @@ fn main() {
 //    println!("tuple_fnin: {}", tuple_fn(tuple_struct));
     zero_sized_types();
 
-    let p1 = Point::default();
-    let p2 = Point::default();
-    let p1_eq_p2 = p1 == p2;
-    let p3 = Point{x: 1.0, y: 2.0};
-    let p1_eq_p3 = p1 == p3;
-    println!("p1 == p2: {}", p1_eq_p2);
-    println!("p1 == p2: {}", p1_eq_p3);
+    test_partial_eq();
 }
 
 fn number_type() -> () {
@@ -287,6 +281,16 @@ impl PartialEq<Point> for Point {
     fn eq(&self, other: &Point) -> bool {
         self.x == other.x && self.y == other.y
     }
+}
+
+fn test_partial_eq() {
+    let p1 = Point::default();
+    let p2 = Point::default();
+    let p1_eq_p2 = p1 == p2;
+    let p3 = Point{x: 1.0, y: 2.0};
+    let p1_eq_p3 = p1 == p3;
+    println!("p1 == p2: {}", p1_eq_p2);
+    println!("p1 == p2: {}", p1_eq_p3);
 }
 
 fn test_point() {
