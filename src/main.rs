@@ -283,6 +283,12 @@ impl PartialEq<Point> for Point {
     }
 }
 
+impl Drop for Point {
+    fn drop(&mut self) {
+        println!("Point x: {} y: {}", self.x, self.y);
+    }
+}
+
 fn test_partial_eq() {
     let p1 = Point::default();
     let p2 = Point::default();
@@ -499,7 +505,7 @@ enum Expr1 {
     BinOp {
         lhs: Box<Expr1>,
         rhs: Box<Expr1>,
-//        op: Op,
+        op: Op,
     },
     If {
         cond: Box<Expr1>,
@@ -516,13 +522,17 @@ enum Expr2 {
 struct BinOp {
     lhs: Box<Expr>,
     rhs: Box<Expr>,
-//    op: Op,
+    op: Op,
 }
 
 struct If {
     cond: Box<Expr>,
     then_branch: Box<Expr>,
     else_branch: Box<Expr>,
+}
+
+struct Op {
+    x: i32
 }
 
 //энум без вариантов — аналог  !
