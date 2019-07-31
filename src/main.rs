@@ -19,6 +19,13 @@ fn main() {
 //    println!("tuple_fnin: {}", tuple_fn(tuple_struct));
     zero_sized_types();
 
+    let p1 = Point::default();
+    let p2 = Point::default();
+    let p1_eq_p2 = p1 == p2;
+    let p3 = Point{x: 1.0, y: 2.0};
+    let p1_eq_p3 = p1 == p3;
+    println!("p1 == p2: {}", p1_eq_p2);
+    println!("p1 == p2: {}", p1_eq_p3);
 }
 
 fn number_type() -> () {
@@ -31,6 +38,9 @@ fn number_type() -> () {
     println!("byte: {}", byte);
 //    assert_eq!(byte, 65);
     println!("{} - {}", 8.5f32.ceil().sin().round().sqrt(), 60f64.sin());
+
+//    let f64_nan = f64::NAN;
+//    println!("f64::NAN: {}", f64_nan);
 }
 
 fn array() {
@@ -257,6 +267,7 @@ fn exclamation_mark_2() -> ! {
     }
 }
 
+#[derive(Default)]
 struct Point {
     x: f64,
     y: f64,
@@ -269,6 +280,12 @@ impl Point {
 
     fn distance_from_origin(&self) -> f64 {
         (self.x * self.x + self.y * self.y).sqrt()
+    }
+}
+
+impl PartialEq<Point> for Point {
+    fn eq(&self, other: &Point) -> bool {
+        self.x == other.x && self.y == other.y
     }
 }
 
