@@ -36,6 +36,18 @@ struct Distance<M> {
     metric: M,
 }
 
+//Zero Sized Types
+//unit struct
+struct Zero;
+
+pub(super)fn zero_sized_types() -> () {
+    let t = Zero;
+    assert!(std::mem::size_of::<Zero>() == 0);
+    assert!(std::mem::size_of::<(Zero, Zero)>() == 0);
+    assert!(std::mem::size_of::<[Zero; 1024]>() == 0);
+    assert!(std::mem::size_of::<()>() == 0);
+}
+
 fn test_types_struct() {
     let d1: Distance<Kilometers> = Distance {
         amount: 92.0,

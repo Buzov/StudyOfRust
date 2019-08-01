@@ -26,7 +26,7 @@ impl Drop for Point {
     }
 }
 
-fn test_partial_eq() {
+pub(crate) fn test_partial_eq() {
     let p1 = Point::default();
     let p2 = Point::default();
     let p1_eq_p2 = p1 == p2;
@@ -36,7 +36,7 @@ fn test_partial_eq() {
     println!("p1 == p2: {}", p1_eq_p3);
 }
 
-pub(super) fn test_point() {
+pub(crate) fn test_point() {
     let point = Point{x: 1.0, y: 2.0};
     println!("point  distance_from_origin: {}", point.distance_from_origin());
     let point_origin = Point::origin();
