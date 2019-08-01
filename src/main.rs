@@ -1,6 +1,9 @@
-use std::{thread, time};
-use std::cmp::Ordering;
+mod structure;
+mod shapes;
 
+use std::{thread, time};
+
+use crate::structure::test_struct_tuple;
 //fn main {}  ==  fn main() -> ()
 fn main() {
 
@@ -14,12 +17,14 @@ fn main() {
     test_life_time_in_fn();
     test_closures();
 
-    test_point();
-    test_point_tuple();
+//    test_point();
+//    test_partial_eq();
+
+    test_struct_tuple();
 //    println!("tuple_fnin: {}", tuple_fn(tuple_struct));
     zero_sized_types();
 
-    test_partial_eq();
+
 }
 
 fn number_type() -> () {
@@ -261,52 +266,6 @@ fn exclamation_mark_2() -> ! {
     }
 }
 
-#[derive(Default)]
-struct Point {
-    x: f64,
-    y: f64,
-}
-
-impl Point {
-    fn origin() -> Point {
-        Point{x: 0.0, y: 0.0}
-    }
-
-    fn distance_from_origin(&self) -> f64 {
-        (self.x * self.x + self.y * self.y).sqrt()
-    }
-}
-
-impl PartialEq<Point> for Point {
-    fn eq(&self, other: &Point) -> bool {
-        self.x == other.x && self.y == other.y
-    }
-}
-
-impl Drop for Point {
-    fn drop(&mut self) {
-        println!("Point x: {} y: {}", self.x, self.y);
-    }
-}
-
-fn test_partial_eq() {
-    let p1 = Point::default();
-    let p2 = Point::default();
-    let p1_eq_p2 = p1 == p2;
-    let p3 = Point{x: 1.0, y: 2.0};
-    let p1_eq_p3 = p1 == p3;
-    println!("p1 == p2: {}", p1_eq_p2);
-    println!("p1 == p2: {}", p1_eq_p3);
-}
-
-fn test_point() {
-    let point = Point{x: 1.0, y: 2.0};
-    println!("point  distance_from_origin: {}", point.distance_from_origin());
-    let point_origin = Point::origin();
-    println!("point_origin  distance_from_origin: {}", point_origin.distance_from_origin());
-//    let point = Point{x: 1.0, y: 2.0, };
-}
-
 fn test_fn_tuple() {
     let (x, y) = fn_tuple();
     println!("x: {}, y: {}", x, y);
@@ -332,32 +291,7 @@ fn tuple() {
     println!("{:?}", &t.0 as *const i32); // 0x7ffc6b2f6aa4
 }
 
-//Паттерн newtype
-//Представление в памяти такое же, как и у внутреннего типа
-//Нет необходимости в аннотациях
-//Нет автоматической конверсии/автоматических методов
-//struct Kilometers(f64);
-//struct Miles(f64);
 
-// Struct-tuple
-struct PointTuple(f64,f64,);
-
-impl PointTuple {
-    fn origin() -> Point {
-        Point{x: 0.0, y: 0.0}
-    }
-
-    fn dist(self, other: PointTuple) -> f64 {
-        let PointTuple(x1, y1) = self;
-        let PointTuple(x2, y2) = other;
-        ((x1 - x2).powi(2) + (y1 - y2).powi(2)).sqrt()
-    }
-}
-
-fn test_point_tuple() {
-    let tuple_struct = PointTuple(0.0, 1.0);
-    assert_eq!(tuple_struct.0, 0.0);
-}
 
 fn tuple_fn(fun: &Fn() -> (f64,f64)) -> (f64,f64) {
     fun()
@@ -388,165 +322,9 @@ fn sleep(millis: u64) {
     assert!(now.elapsed() >= ten_millis);
 }
 
-// Types tage
-struct Kilometers;
-struct Miles;
-
-struct Distance<M> {
-    amount: f64,
-    metric: M,
-}
-
-fn test_types_struct() {
-    let d1: Distance<Kilometers> = Distance {
-        amount: 92.0,
-        metric: Kilometers,
-    };
-    let d2: Distance<Miles> = Distance {
-        amount: 92.0,
-        metric: Miles,
-    };
-}
-
 fn print_slice(xs: &[i32]) {
     for i in 0..xs.len() {
         println!("{}", xs[i]);
     }
 }
 
-
-//Dynamically Sized Types
-//[i32; 4]  — четыре числа
-//&[i32; 4]  — адресс в памяти, где лежат четыре числа
-//[i32]  — n чисел
-//&[i32]  — указатель + количество элементов, fat pointer
-//mem::size_of::<[i32]>();
-//^^^^^^^^^^^^^^^^^^^^^ doesn't have a size known at compile-time
-//assert_eq!(
-//mem::size_of::<&[i32]>(),
-//mem::size_of::<usize>() * 2,
-
-enum Shape {
-    Circle {
-        center: Point,
-        radius: f64,
-    },
-    Square {
-        bottom_left: Point,
-        top_right: Point,
-    },
-}
-
-impl Shape {
-    fn circle(center: Point, radius: f64) -> Shape {
-        Shape::Circle { center, radius }
-    }
-    fn area(&self) -> f64 {
-        match self {
-            Shape::Circle { radius, .. } => {
-                std::f64::consts::PI * radius * radius
-            }
-            Shape::Square { bottom_left, top_right } => {
-                unimplemented!()
-            }
-        }
-    }
-}
-
-enum Expr {
-    Negation(Box<Expr>),
-    BinOp { lhs: Box<Expr>, rhs: Box<Expr> },
-    Unit,
-}
-
-// use std::cmp::Ordering;
-//enum Ordering {
-//    Less,
-//    Equal,
-//    Greater,
-//}
-
-fn binary_search(xs: &[i32], x: i32) -> bool {
-    if xs.is_empty() {
-        return false;
-    }
-    let mid = xs.len() / 2;
-    let subslice = match xs[mid].cmp(&x) {
-        Ordering::Less => &xs[mid + 1..],
-        Ordering::Equal => return true,
-        Ordering::Greater => &xs[..mid],
-    };
-    binary_search(subslice, x)
-}
-
-fn foo2(xs: &[i32]) {
-    match xs.get(92) {
-        Some(value) => println!("Some"),
-        None => panic!("out of bounds access")
-    }
-}
-
-//enum Result<T, E> {
-//    Ok(T),
-//    Err(E),
-//}
-//impl<T> [T] {
-//    pub fn binary_search(&self, x: &T) -> Result<usize, usize>
-//        where
-//            T: Ord
-//    {
-//        self.binary_search_by(|p| p.cmp(x))
-//    }
-//}
-
-//Newtype Variant
-//BinOp  и If  типами не являются
-enum Expr1 {
-    BinOp {
-        lhs: Box<Expr1>,
-        rhs: Box<Expr1>,
-        op: Op,
-    },
-    If {
-        cond: Box<Expr1>,
-        then_branch: Box<Expr1>,
-        else_branch: Box<Expr1>,
-    },
-}
-
-enum Expr2 {
-    BinOp(BinOp),
-    If(If)
-}
-
-struct BinOp {
-    lhs: Box<Expr>,
-    rhs: Box<Expr>,
-    op: Op,
-}
-
-struct If {
-    cond: Box<Expr>,
-    then_branch: Box<Expr>,
-    else_branch: Box<Expr>,
-}
-
-struct Op {
-    x: i32
-}
-
-//энум без вариантов — аналог  !
-//size_of::<Void>() == 0 математически должна быть -бесконечность
-enum Void {}
-
-fn test_enum_void(void: Void) -> i32 {
-    let x =  match void {
-    };
-    x
-}
-//гарантированно что
-//mem::size_of::<Option<&T>>() == mem::size_of::<&T>()
-//mem::size_of::<Option<Box<T>>>() == mem::size_of::<Box<T>>()
-//bool  занимает 1 байт, чтобы  &bool  работал всегда
-//Newtype Variant может быть больше обычного enum из-за паддинга :o)
-//бывают типы "страных" размеров: ZST, DST, uninhabited
