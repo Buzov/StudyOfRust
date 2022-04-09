@@ -10,10 +10,9 @@ use crate::shapes::point::Point;
 //struct Miles(f64);
 
 // Struct-tuple
-struct StructTuple(f64,f64,);
+struct StructTuple(f64, f64);
 
 impl StructTuple {
-
     fn dist(self, other: StructTuple) -> f64 {
         let StructTuple(x1, y1) = self;
         let StructTuple(x2, y2) = other;
@@ -25,7 +24,6 @@ pub(super) fn test_struct_tuple() {
     let tuple_struct = StructTuple(0.0, 1.0);
     assert_eq!(tuple_struct.0, 0.0);
 }
-
 
 // Types tage
 struct Kilometers;
@@ -40,7 +38,7 @@ struct Distance<M> {
 //unit struct
 struct Zero;
 
-pub(super)fn zero_sized_types() -> () {
+pub(super) fn zero_sized_types() -> () {
     let t = Zero;
     assert!(std::mem::size_of::<Zero>() == 0);
     assert!(std::mem::size_of::<(Zero, Zero)>() == 0);
@@ -87,10 +85,11 @@ impl Shape {
     }
     fn area(&self) -> f64 {
         match self {
-            Shape::Circle { radius, .. } => {
-                std::f64::consts::PI * radius * radius
-            }
-            Shape::Square { bottom_left, top_right } => {
+            Shape::Circle { radius, .. } => std::f64::consts::PI * radius * radius,
+            Shape::Square {
+                bottom_left: _,
+                top_right,
+            } => {
                 unimplemented!()
             }
         }
@@ -126,7 +125,7 @@ fn binary_search(xs: &[i32], x: i32) -> bool {
 fn foo2(xs: &[i32]) {
     match xs.get(92) {
         Some(value) => println!("Some"),
-        None => panic!("out of bounds access")
+        None => panic!("out of bounds access"),
     }
 }
 
@@ -160,7 +159,7 @@ enum Expr1 {
 
 enum Expr2 {
     BinOp(BinOp),
-    If(If)
+    If(If),
 }
 
 struct BinOp {
@@ -176,7 +175,7 @@ struct If {
 }
 
 struct Op {
-    x: i32
+    x: i32,
 }
 
 //энум без вариантов — аналог  !
@@ -184,8 +183,7 @@ struct Op {
 enum Void {}
 
 fn test_enum_void(void: Void) -> i32 {
-    let x =  match void {
-    };
+    let x = match void {};
     x
 }
 //гарантированно что

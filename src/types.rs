@@ -1,18 +1,18 @@
 use std::{thread, time};
 
-pub(super)fn number_type() -> () {
+pub(super) fn number_type() -> () {
     let y = 92_000_000i64;
     println!("y: {}", y);
 
-    let hex_octal_bin : i64 = 0xffff_ffff + 0o777 + 0b1;
+    let hex_octal_bin: i64 = 0xffff_ffff + 0o777 + 0b1;
     println!("{}", hex_octal_bin);
     let byte: u8 = b'a';
     println!("byte: {}", byte);
-//    assert_eq!(byte, 65);
+    //    assert_eq!(byte, 65);
     println!("{} - {}", 8.5f32.ceil().sin().round().sqrt(), 60f64.sin());
 
-//    let f64_nan = f64::NAN;
-//    println!("f64::NAN: {}", f64_nan);
+    //    let f64_nan = f64::NAN;
+    //    println!("f64::NAN: {}", f64_nan);
 }
 
 fn array() {
@@ -22,7 +22,7 @@ fn array() {
     let mut buf = [0u8; 1024]; // буфер из 1024 элементов, заполненный нулями
 }
 
-pub(super)fn links() {
+pub(super) fn links() {
     let mut x: i32 = 92;
     let r: &mut i32 = &mut 92; // явное взятие ссылки
     *r += 1; // явное разыменовывание ссылки
@@ -33,7 +33,7 @@ pub(super)fn links() {
     println!("{}", a);
 }
 
-pub(super)fn box_test() {
+pub(super) fn box_test() {
     let x: Box<i32> = Box::new(92);
 }
 
@@ -43,29 +43,28 @@ fn foo() {
     bar(&*a)
 }
 
-fn bar(b: &i32) {
-}
+fn bar(b: &i32) {}
 
-pub(super)fn test_vec() {
+pub(super) fn test_vec() {
     for x in vec![1, 2, 3] {
         println!("x = {}", x);
     }
 
-    let xs  = vec![1, 2, 3];
+    let xs = vec![1, 2, 3];
     for i in 0..xs.len() {
         let x = xs[i];
         println!("x = {}", x);
     }
-    let xs2  = vec![1, 2, 3];
+    let xs2 = vec![1, 2, 3];
     print_slice(&xs2);
 }
 
-pub(super)fn loops() {
+pub(super) fn loops() {
     for x in 0..10 {
         println!("{}", x); // x: i32
     }
 
-    for (i,j) in (5..10).enumerate() {
+    for (i, j) in (5..10).enumerate() {
         println!("i = {} и j = {}", i, j);
     }
 
@@ -75,27 +74,28 @@ pub(super)fn loops() {
     }
 
     let x: () = while false {};
-    let x2: () = if true {  92; };
-//    let x3 = if true {  92 }; error ожидается тип () если нет блока else
+    let x2: () = if true {
+        92;
+    };
+    //    let x3 = if true {  92 }; error ожидается тип () если нет блока else
 
-//    while true  {
-//        if cond1 {
-//            continue;
-//        }
-//        if cond2 {
-//            break;
-//        }
-//    }
-//
-//    'outer: while cond1 {
-//        while cond2 {
-//            break 'outer;
-//        }
-//    }
-
+    //    while true  {
+    //        if cond1 {
+    //            continue;
+    //        }
+    //        if cond2 {
+    //            break;
+    //        }
+    //    }
+    //
+    //    'outer: while cond1 {
+    //        while cond2 {
+    //            break 'outer;
+    //        }
+    //    }
 }
 
-pub(super)fn test_ranges() {
+pub(super) fn test_ranges() {
     let bounded: std::ops::Range<i32> = 0..10;
     let from = 0..;
     let to = ..10;
@@ -107,16 +107,15 @@ pub(super)fn test_ranges() {
     }
 }
 
-
-pub(super)fn test_loop() {
-//    let uninit;
-//    while true {
-//        if condition {
-//            uninit = 92;
-//            break;
-//        }
-//    }
-//    pritnln!("{}", uninit); // error
+pub(super) fn test_loop() {
+    //    let uninit;
+    //    while true {
+    //        if condition {
+    //            uninit = 92;
+    //            break;
+    //        }
+    //    }
+    //    pritnln!("{}", uninit); // error
     let x = 30;
     let init;
     loop {
@@ -126,10 +125,9 @@ pub(super)fn test_loop() {
         }
     }
     println!("{}", init); // ok
-
 }
 
-pub(super)fn test_loop_2() {
+pub(super) fn test_loop_2() {
     let x = 30;
     let init;
 
@@ -141,10 +139,10 @@ pub(super)fn test_loop_2() {
     println!("{}", init); // ok!
 }
 
-pub(super)fn test_loop_3() {
+pub(super) fn test_loop_3() {
     let x = 30;
     let init: i32 = loop {
-        if  x == 31 {
+        if x == 31 {
             break 92;
         }
     };
@@ -152,32 +150,34 @@ pub(super)fn test_loop_3() {
     println!("{}", init); // ok!
 }
 
-pub(super)fn test_expression() -> i32 {
+pub(super) fn test_expression() -> i32 {
     let x = 30;
     if x == 0 {
         println!("zero");
-    }      // statement
+    } // statement
 
-    { 0; } // statement
+    {
+        0;
+    } // statement
 
+    let s = if x > 0 { "positive" } else { "negative" };
 
-
-    let s = if x > 0 {
-        "positive"
+    if true {
+        92
     } else {
-        "negative"
-    };
-
-    if true { 92 } else { 62 } // expression!
+        62
+    } // expression!
 }
 
-pub(super)fn test_closures() {
+pub(super) fn test_closures() {
     let square = |x| x * x;
     assert_eq!(square(5), 25);
 }
 
-pub(super)fn test_fn_like_parameter() {
-    fn plus_one(i: i32) -> i32 { i + 1 }
+pub(super) fn test_fn_like_parameter() {
+    fn plus_one(i: i32) -> i32 {
+        i + 1
+    }
 
     let f = plus_one;
     let six = f(5);
@@ -190,7 +190,7 @@ fn fn_like_parameter(func: fn(i32) -> i32, i: i32) -> i32 {
     func(i)
 }
 
-pub(super)fn test_life_time_in_fn() {
+pub(super) fn test_life_time_in_fn() {
     let x = 1;
     let r: &i32;
     {
@@ -199,27 +199,29 @@ pub(super)fn test_life_time_in_fn() {
     }
     println!("{}", *r);
     //    let x = 1;
-//    let r: &i32;
-//    let z: i32;
-//    {
-//        let y = 2;
-//        r = &y; // borrowed value does not live long enough
-//        z = y;
-//    }
-//    println!("{}", z);
-//    println!("{}", *r);
+    //    let r: &i32;
+    //    let z: i32;
+    //    {
+    //        let y = 2;
+    //        r = &y; // borrowed value does not live long enough
+    //        z = y;
+    //    }
+    //    println!("{}", z);
+    //    println!("{}", *r);
 }
 
 fn life_time_in_fn<'a, 'b>(x: &'a i32, y: &'b i32) -> &'a i32 {
     println!("life_time_in_fn y: {}", y);
     // y если вернуть y - будет ошибка компиляции
     x // parameter and the return type are declared
-    // with different lifetimes
+      // with different lifetimes
 }
 
 fn block() {
-    let i: i32 = { 1  };
-    let i: ()  = { 1; };
+    let i: i32 = { 1 };
+    let i: () = {
+        1;
+    };
 }
 
 fn exclamation_mark_0() -> i32 {
@@ -228,18 +230,16 @@ fn exclamation_mark_0() -> i32 {
 }
 
 fn exclamation_mark_1() -> ! {
-//    let i = return;
+    //    let i = return;
     let x = exclamation_mark_2();
     x
 }
 
 fn exclamation_mark_2() -> ! {
-    loop {
-
-    }
+    loop {}
 }
 
-pub(super)fn test_fn_tuple() {
+pub(super) fn test_fn_tuple() {
     let (x, y) = fn_tuple();
     println!("x: {}, y: {}", x, y);
     tuple();
@@ -249,10 +249,10 @@ fn fn_tuple<'a>() -> (i32, &'a str) {
     (1, "dfgd")
 }
 
-pub(super)fn tuple() {
+pub(super) fn tuple() {
     let pair: (f32, i32) = (0.0, 92);
     let one: (f32,) = (0.0,); // кортеж из одного элемента, нужна запятая
-//    let (x, y) = pair;
+                              //    let (x, y) = pair;
     let (_x, _y) = pair;
     let x = pair.0;
     let y = pair.1;
@@ -264,11 +264,11 @@ pub(super)fn tuple() {
     println!("{:?}", &t.0 as *const i32); // 0x7ffc6b2f6aa4
 }
 
-fn tuple_fn(fun: &Fn() -> (f64,f64)) -> (f64,f64) {
+fn tuple_fn(fun: &dyn Fn() -> (f64, f64)) -> (f64, f64) {
     fun()
 }
 
-pub(super)fn test_sleep() {
+pub(super) fn test_sleep() {
     sleep(1000);
 }
 
